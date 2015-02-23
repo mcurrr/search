@@ -15,7 +15,8 @@ function getuserfield($field) {
 	global $link;
 	$query = "SELECT `$field` FROM `users` WHERE `id` = '".$_SESSION['id']."'";
 	if ($result = mysqli_query($link, $query)) {
-		return mysqli_fetch_assoc($result)[$field]; 
+		$arr = mysqli_fetch_assoc($result);
+		return $arr[$field];
 	}
 	else {
 		echo "Error: ".mysqli_error($link);

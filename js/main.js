@@ -1,6 +1,7 @@
 $(function() {
 	$input = $("input[name='search']");
 	$userName = $("#nik");
+	$label = $('#nikName');
 
 	$input.on('focus', function() {
 		$("#output").html('');
@@ -18,10 +19,10 @@ $(function() {
 		var searchName = $userName.val();
 		$.post("userNameRegCheck.php", {searchVal: searchName}, function(data){
 			if (data != 0) {
-				$userName.next().html("Taken").css({"color": "red"});
+				$label.html("Nik is taken!").css({"color": "black"});
 			}
 			else {
-				$userName.next().html("");
+				$label.html("Nik: ").css({"color": "inherit"});
 			}
 			console.log(data);
 		}); 

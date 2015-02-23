@@ -2,6 +2,8 @@
 require 'core.inc.php';
 require 'connect.inc.php';
 
+$warning = '';
+
 if(!loggedin()) {
 
 	if (isset($_POST['nik']) && isset($_POST['password']) && isset($_POST['password_again'])) {
@@ -11,7 +13,7 @@ if(!loggedin()) {
 			$pass_2 = sha1(mysqli_real_escape_string($link, $_POST['password_again']));
 			$email = mysqli_real_escape_string($link, $_POST['email']);
 			if ($pass != $pass_2) {
-				echo "Passwords do not match.";
+				$warning = 'Passwords do not match.';
 			}
 			else {
 				$query = "SELECT `id`, `password` FROM `users` WHERE `nik` = '".$nik."'";
@@ -21,7 +23,7 @@ if(!loggedin()) {
 						$query = "INSERT INTO `users` (`nik`,`password`) VALUES ('".$nik."','".$pass."')";
 						if ($result = mysqli_query($link, $query)) {
 							if(!empty($email)) {
-								$query = "UPDATE `users` SET `email`='".$email."'";
+								$query = "UPDATE `users` SET `email`='".$email."' WHERE `nik` = '".$nik."'";
 								if ($result = mysqli_query($link, $query)) {
 									//send email
 
@@ -56,7 +58,7 @@ if(!loggedin()) {
 								header('Location: search.php');
 						}
 						else {
-							echo 'Nik is already taken by someone';
+							$warning = 'Nik is already taken by someone';
 						}
 					}
 				}
@@ -66,12 +68,12 @@ if(!loggedin()) {
 			}
 		}
 		else {
-			echo 'Please fill required fields.';
+			$warning = 'Please fill required fields.';
 		}
 	}
 }
 else {
-	echo 'You\'re already registered. Please log in';
+	$warning = 'You\'re already registered. Please log in';
 }
 
 ?>
@@ -80,22 +82,36 @@ else {
 <head>
 	<meta charset="UTF-8">
 	<title>registration</title>
+	<link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-	
-<h3>Registration</h3><br>
-<form action="registr.php" method="POST">
-	Nik: <br> <input type="text" name="nik" autocomplete="off" value="" required id="nik"> <label for="nik"></label><br>
-	Password: <br> <input type="password" name="password" required><br>
-	Password again: <br> <input type="password" name="password_again" required><br>
-	Email: <br> <input type="email" name="email" autocomplete="off" value=""><br><br>
-	<input type="submit" value="Register">
-	<input type="reset" value="Reset">
-</form>
-<br>
-<a href="loginForm.inc.php">Log in</a>
+<div id="login">
+	<h3>Registration</h3>
+	<form action="registr.php" method="POST">
+		<label for="nik" id="nikName">Nik: </label><br> <input type="text" name="nik" autocomplete="off" value="" required id="nik" class="logInput" maxlength="10"> *<br/>
+		<label for="pass">Password: </label><br> <input type="password" name="password" required class="logInput" maxlength="15"> *<br>
+		<label for="pass2">Password again: </label><br> <input type="password" name="password_again" required class="logInput" maxlength="15"> *<br>
+		<label for="email">Email: <br> </label><input type="email" name="email" autocomplete="off" value="" class="logInput">&nbsp;<br/><i>* required</i><br/>
+		<input type="submit" value="Register">
+		<input type="reset" value="Reset">
+	</form>
+	<a href="loginForm.inc.php">Log in</a>
+	<div id="warning">
+		<?php echo $warning ?>
+	</div>
+</div>
+
+	<div id="general">
+		<?php include 'commonInfo.inc.php'; ?>
+	</div>
+	<div id="pic">
+		<p>Must know them all</p>
+	</div>
+	<div id="home">
+		<a href="../index.php"><img src="img/home.png" height="100" width="100" alt="home"></a>
+	</div>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script> 
-<script src="main.js"></script>
+<script src="js/main.js"></script>
 </body>
 </html>

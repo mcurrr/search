@@ -2,18 +2,19 @@
 require 'connect.inc.php';
 
 
-$query = "SELECT `id` FROM `characters` WHERE `founded` = '1' AND `by whom` = '".getuserfield('nik')."'";
+$query = "SELECT `count` FROM `users` WHERE `nik` = '".getuserfield('nik')."'";
 if ($result = mysqli_query($link, $query)) {
-	$personal = mysqli_num_rows($result);
+	$arr = mysqli_fetch_assoc($result);
+	$personal = $arr['count'];
 }
 else {
 	echo 'Error: '.mysqli_error($link);
 }
 ?>
 
-<br>
+
 <h2>Personal statictic:</h2>
-<p>You've discavered:
+<p><h4>You've discavered:</h4><br/>
 <?php
 echo '<b>'.$personal.'</b><br>';
 ?>
